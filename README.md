@@ -380,6 +380,325 @@ See https://hub.docker.com/repository/docker/apason/simplex
 
 Exercise 16:
 
-https://heroku-example-mooc.herokuapp.com 
+https://heroku-example-mooc.herokuapp.com
 
 
+Problems and solutions for docker-compose:
+
+volumes: When you use a named volume, like "data:/cjworkbench:rw" you must declare it at the docker-compose file
+ However using just path can be done giving relative or full path.
+
+EXERCISE 2.1
+
+version: "3.7"
+services:
+  logger:
+    image: devopsdockeruh/first_volume_exercise
+    volumes:
+      - ./:/usr/app/helper
+    command: bash -c "touch helper/logs.txt && rm logs.txt && ln -s helper/logs.txt logs.txt && node index.js"
+
+EXERCISE 2.2:
+
+version: '3.5'  
+
+services: 
+    ports_exercise: 
+      image: devopsdockeruh/ports_exercise
+      ports: 
+        - 80:80
+
+
+EXERCISE 2.3:
+
+assuming the dockerfiles are in the same folder named backend.Dockerfile and frontend.Dockerfile
+
+version: '3.5'  
+
+services:
+
+    backend:
+      build:
+        context: .
+        dockerfile: backend.Dockerfile
+      image: backend
+      ports:
+       - 8000:8000
+      volumes:
+       - ./logs.txt:/app/backend-example-docker/logs.txt
+
+    frontend:
+      build:
+        context: .
+        dockerfile: frontend.Dockerfile
+      image: frontend
+      ports:
+       - 5000:5000
+
+
+EXERCISE 2.4:
+
+╭─apa@turbopenis ~/DEVOPS-WITH-DOCKER-MOOC-2019/scaling-exercise  ‹master› 
+╰─➤  docker-compose up --scale compute=10 -d
+
+
+EXERCISE 2.5:
+
+version: '3.5'  
+
+services:
+
+    backend:
+      build:
+        context: .
+        dockerfile: backend.Dockerfile
+      image: backend
+      ports:
+       - 8000:8000
+      volumes:
+       - ./logs.txt:/app/backend-example-docker/logs.txt
+      environment:
+       - REDIS=redis
+
+    frontend:
+      build:
+        context: .
+        dockerfile: frontend.Dockerfile
+      image: frontend
+      ports:
+       - 5000:5000
+
+
+    redis:
+      image: redis
+
+
+EXERCISE 2.6:
+
+
+version: '3.5'  
+
+services:
+
+    backend:
+      build:
+        context: .
+        dockerfile: backend.Dockerfile
+      image: backend
+      ports:
+       - 8000:8000
+      volumes:
+       - ./logs.txt:/app/backend-example-docker/logs.txt
+      environment:
+       - REDIS=redis
+       - DB_USERNAME=postgres
+       - DB_PASSWORD=example
+       - DB_HOST=db
+      depends_on:
+       - redis
+       - db
+      restart: unless-stopped
+
+    frontend:
+      build:
+        context: .
+        dockerfile: frontend.Dockerfile
+      image: frontend
+      ports:
+       - 5000:5000
+
+    redis:
+      image: redis
+
+    db:
+      image: postgres
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: example
+      container_name: db_backend
+      volumes:
+       - database_backend:/var/lib/postgresql/data
+
+
+
+volumes:
+  database_backend:
+
+
+
+EXERCISE 2.7:
+
+
+
+EXERCISE 2.8:
+
+version: '3.5'  
+
+services:
+
+    backend:
+      build:
+        context: .
+        dockerfile: backend.Dockerfile
+      image: backend
+      ports:
+       - 8000:8000
+      volumes:
+       - ./logs.txt:/app/backend-example-docker/logs.txt
+      environment:
+       - REDIS=redis
+       - DB_USERNAME=postgres
+       - DB_PASSWORD=example
+       - DB_HOST=db
+      depends_on:
+       - redis
+       - db
+      restart: unless-stopped
+
+    frontend:
+      build:
+        context: .
+        dockerfile: frontend.Dockerfile
+      image: frontend
+      ports:
+       - 5000:5000
+
+    redis:
+      image: redis
+
+    db:
+      image: postgres
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: example
+      container_name: db_backend
+      volumes:
+       - database_backend:/var/lib/postgresql/data
+
+    proxy:
+      image: nginx
+      volumes:
+       - ./nginx.conf:/etc/nginx/nginx.conf
+      ports:
+       - 80:80
+      restart: unless-stopped
+      depends_on:
+       - backend
+       - frontend
+
+volumes:
+  database_backend:
+
+
+EXERCISE 9:
+
+already done in previous
+
+EXERCISE 10:
+
+## start of frontend Dockerfile
+
+FROM ubuntu
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl git
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt install -y nodejs
+
+RUN git clone https://github.com/docker-hy/frontend-example-docker
+WORKDIR /app/frontend-example-docker
+
+RUN npm install
+
+EXPOSE 5000
+
+ENV API_URL=http://localhost/api/
+
+CMD ["npm", "start"]
+
+## end of frontend Dockerfile
+
+## start of backend Dockerfile
+
+FROM ubuntu
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl git
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt install -y nodejs
+
+RUN git clone https://github.com/docker-hy/backend-example-docker
+WORKDIR /app/backend-example-docker
+
+RUN npm install
+
+EXPOSE 8000
+
+ENV FRONT_URL=http://localhost
+
+CMD ["npm", "start"]
+
+## end of backend Dockerfile
+
+## start of docker-compose.yml
+
+version: '3.5'  
+
+services:
+
+    backend:
+      build:
+        context: .
+        dockerfile: backend.Dockerfile
+      image: backend
+      ports:
+       - 8000:8000
+      volumes:
+       - ./logs.txt:/app/backend-example-docker/logs.txt
+      environment:
+       - REDIS=redis
+       - DB_USERNAME=postgres
+       - DB_PASSWORD=example
+       - DB_HOST=db
+      depends_on:
+       - redis
+       - db
+      restart: unless-stopped
+
+    frontend:
+      build:
+        context: .
+        dockerfile: frontend.Dockerfile
+      image: frontend
+      ports:
+       - 5000:5000
+
+    redis:
+      image: redis
+
+    db:
+      image: postgres
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: example
+      container_name: db_backend
+      volumes:
+       - database_backend:/var/lib/postgresql/data
+
+    proxy:
+      image: nginx
+      volumes:
+       - ./nginx.conf:/etc/nginx/nginx.conf
+      ports:
+       - 80:80
+      restart: unless-stopped
+      depends_on:
+       - backend
+       - frontend
+
+volumes:
+  database_backend:
+
+## end of docker-compose.yml
