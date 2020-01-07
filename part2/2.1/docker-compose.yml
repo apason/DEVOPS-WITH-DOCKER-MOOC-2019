@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  logger:
+    image: devopsdockeruh/first_volume_exercise
+    volumes:
+      - ./:/usr/app/helper
+    command: bash -c "touch helper/logs.txt && rm logs.txt && ln -s helper/logs.txt logs.txt && node index"
