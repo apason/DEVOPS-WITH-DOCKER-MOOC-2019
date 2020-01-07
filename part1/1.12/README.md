@@ -3,7 +3,7 @@
 The Dockerfiles for frontend and backend are in this directory.
 
 The image `backend` is built from the file backend.Dockerfile and the image `frontend` is build from the file
-frontend.Dockerfile. After the build we run the images with ports correct ports. In addition the backend has a logs.txt
+frontend.Dockerfile. After the build we run the images with ports mapped correctly. In addition the backend has a logs.txt
 file bind mounted to the container.
 
 

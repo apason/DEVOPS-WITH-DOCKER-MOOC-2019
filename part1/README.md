@@ -44,7 +44,7 @@ Entering it to the started container yelds the secret message `This is the secre
 
 The secret message of this exercise is `Docker is easy`
 
-    $ docker run -dit devopsdockeruh/exec_bash_exercise
+    $ docker run -d devopsdockeruh/exec_bash_exercise
     c2ff8c3ec29bc2eb41a2aa0e64a8f4041145737432ad14d1717e22fa852ffde6
   
     $ docker exec -it c2f /bin/bash
