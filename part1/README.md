@@ -71,3 +71,43 @@ The container needs curl so the installation can be run before the actual curl r
     <p>The document has moved <a href="http://www.helsinki.fi/">here</a>.</p>
     </body></html>
 
+## Exercise 1.8
+
+Bind mounting a non existing local path always creates a *directory*. In order to bind mount only a single file
+we must first create one.
+
+    $ touch container.logs && docker run -v $(pwd)/container.logs:/usr/app/logs.txt devopsdockeruh/first_volume_exercise
+
+After this, the logs are found in the local file container.logs
+
+## Exercise 1.9
+
+In this exercise the local port is not specified. Lets use port 1234.
+
+    docker run -d -p 1234:80 devopsdockeruh/ports_exercise
+    Unable to find image 'devopsdockeruh/ports_exercise:latest' locally
+    latest: Pulling from devopsdockeruh/ports_exercise
+    cd784148e348: Pull complete 
+    9abca35fefbf: Pull complete 
+    7fc670963d22: Pull complete 
+    893040f9bc16: Pull complete 
+    b0ae6401e570: Pull complete 
+    Digest: sha256:2ff93dd0c744aee7a8f00bc9558d09fd6279493da0d01769fe600f78fb4593f2
+    Status: Downloaded newer image for devopsdockeruh/ports_exercise:latest
+    cd46a23db6eaedb17933c11d75a7d28aae68c00b244d424fd8a77b95be2ff6c9
+
+    $ curl http://localhost:1234
+    Ports configured correctly!!%
+
+
+## Exercise 1.15
+
+There are a repository in github.com/apason/simplex which is dockerized in github.com/apason/simplex-docker . The program
+implements the simplex algorithm which calculates the optimal values for a given linear programming problem. The readme
+file describes how to use the program and the docker image.
+
+The project is published in docker-hub: https://hub.docker.com/repository/docker/apason/simplex
+
+## Exercise 1.16
+
+The application pushed to heroku can be found here: https://heroku-example-mooc.herokuapp.com
