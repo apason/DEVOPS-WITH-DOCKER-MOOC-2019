@@ -23,8 +23,8 @@ After cleaning all docker containers and images
   
 ## Exercise 1.3
 
-The password defined in the documentation of devopsdockeruh/pull_exercise repository is "_basics_".
-Entering it to the started container yelds the secret message "_This is the secret message_".
+The password defined in the documentation of devopsdockeruh/pull_exercise repository is `basics`.
+Entering it to the started container yelds the secret message `This is the secret message`.
 
     $ docker run -it devopsdockeruh/pull_exercise
     Unable to find image 'devopsdockeruh/pull_exercise:latest' locally
@@ -42,7 +42,7 @@ Entering it to the started container yelds the secret message "_This is the secr
 
 ## Exercise 1.4
 
-The secret message of this exercise is "_Docker is easy_"
+The secret message of this exercise is `Docker is easy`
 
     $ docker run -dit devopsdockeruh/exec_bash_exercise
     c2ff8c3ec29bc2eb41a2aa0e64a8f4041145737432ad14d1717e22fa852ffde6
