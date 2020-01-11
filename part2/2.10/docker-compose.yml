@@ -39,8 +39,8 @@ services:
         POSTGRES_PASSWORD: example
       container_name: db_backend
       volumes:
-         - postgres_database:/var/lib/postgresql/data
-       
+       - database_backend:/var/lib/postgresql/data
+
     proxy:
       image: nginx
       volumes:
@@ -53,8 +53,4 @@ services:
        - frontend
 
 volumes:
-  postgres_database:
-   driver_opts:
-     o: bind
-     type: volume
-     device: /home/apa/DEVOPS-WITH-DOCKER-MOOC-2019/part2/2.9/database
+  database_backend:
